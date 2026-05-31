@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تقرير الحضور</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #1e3a5f;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .sidebar a:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 230px;">
+        <h5 class="text-white text-center mb-4">🏢 نظام HR</h5>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i> لوحة التحكم</a>
+        <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i> الموظفين</a>
+        <a href="{% url 'attendance_list' %}"><i class="bi bi-calendar-check me-2"></i> الحضور</a>
+        <a href="{% url 'logout' %}" style="position: absolute; bottom: 20px;">
+            <i class="bi bi-box-arrow-left me-2"></i> تسجيل الخروج
+        </a>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+       <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>📅 تقرير الحضور — {{ today }}</h3>
+    <form method="get" class="d-flex gap-2">
+        <input type="date" name="date" class="form-control" value="{{ today|date:'Y-m-d' }}">
+        <button type="submit" class="btn btn-primary">عرض</button>
+    </form>
+</div>
+
+        <div class="row g-4">
+            <div class="col-md-7">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">✅ الحاضرون ({{ attendances.count }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>وقت الدخول</th>
+                                    <th>وقت الخروج</th>
+                                    <th>ساعات العمل</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for att in attendances %}
+                                <tr>
+                                    <td>{{ att.employee.name }}</td>
+                                    <td>{{ att.time_in }}</td>
+                                    <td>{{ att.time_out|default:"لم يسجل خروج" }}</td>
+                                    <td>{{ att.work_hours|default:"-" }}</td>
+                                    <td>
+                                        {% if att.status == 'present' %}
+                                            <span class="badge bg-success">حاضر</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">متأخر</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">❌ الغائبون ({{ absent.count }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>القسم</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emp in absent %}
+                                <tr>
+                                    <td>{{ emp.name }}</td>
+                                    <td>{{ emp.department }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مراجعة الطلب</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #1e3a5f;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .sidebar a:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 230px;">
+        <h5 class="text-white text-center mb-4">🏢 نظام HR</h5>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i> لوحة التحكم</a>
+        <a href="{% url 'request_list' %}"><i class="bi bi-envelope me-2"></i> الطلبات</a>
+        <a href="{% url 'logout' %}" style="position: absolute; bottom: 20px;">
+            <i class="bi bi-box-arrow-left me-2"></i> تسجيل الخروج
+        </a>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <h3 class="mb-4">🔍 مراجعة الطلب</h3>
+
+        <div class="card shadow border-0" style="max-width: 600px;">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">تفاصيل الطلب</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">الموظف</p>
+                        <h5>{{ req.employee.name }}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">نوع الطلب</p>
+                        <h5>{{ req.get_request_type_display }}</h5>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <p class="text-muted mb-1">من تاريخ</p>
+                        <h5>{{ req.start_date|default:"-" }}</h5>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <p class="text-muted mb-1">إلى تاريخ</p>
+                        <h5>{{ req.end_date|default:"-" }}</h5>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <p class="text-muted mb-1">الوصف</p>
+                        <p class="border rounded p-2">{{ req.description }}</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label>القرار</label>
+                        <select name="status" class="form-select" required>
+                            <option value="pending" {% if req.status == 'pending' %}selected{% endif %}>قيد الانتظار</option>
+                            <option value="approved" {% if req.status == 'approved' %}selected{% endif %}>موافق ✅</option>
+                            <option value="rejected" {% if req.status == 'rejected' %}selected{% endif %}>مرفوض ❌</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>ملاحظة المدير</label>
+                        <textarea name="manager_note" class="form-control" rows="3" 
+                                  placeholder="أضف ملاحظة للموظف">{{ req.manager_note }}</textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'request_list' %}" class="btn btn-secondary">رجوع</a>
+                        <button type="submit" class="btn btn-primary">💾 حفظ القرار</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

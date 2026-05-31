@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إعدادات الدوام</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #1e3a5f;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .sidebar a:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 230px;">
+        <h5 class="text-white text-center mb-4">🏢 نظام HR</h5>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i> لوحة التحكم</a>
+        <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i> الموظفين</a>
+        <a href="{% url 'attendance_list' %}"><i class="bi bi-calendar-check me-2"></i> الحضور</a>
+        <a href="{% url 'work_settings' %}"><i class="bi bi-gear me-2"></i> الإعدادات</a>
+        <a href="{% url 'logout' %}" style="position: absolute; bottom: 20px;">
+            <i class="bi bi-box-arrow-left me-2"></i> تسجيل الخروج
+        </a>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <h3 class="mb-4">⚙️ إعدادات الدوام</h3>
+
+        <div class="card shadow border-0" style="max-width: 500px;">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">أوقات الدوام</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">وقت بداية الدوام</label>
+                        <input type="time" name="work_start" class="form-control" 
+                               value="{{ settings.work_start|time:'H:i' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">وقت نهاية الدوام</label>
+                        <input type="time" name="work_end" class="form-control" 
+                               value="{{ settings.work_end|time:'H:i' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">فترة السماحية (دقائق)</label>
+                        <input type="number" name="grace_period" class="form-control" 
+                               value="{{ settings.grace_period }}" min="0" max="60">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">💾 حفظ الإعدادات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

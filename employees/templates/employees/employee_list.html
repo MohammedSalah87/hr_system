@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>👥 قائمة الموظفين</h2>
+       <a href="{% url 'dashboard' %}" class="btn btn-secondary">🏠 الرئيسية</a>
+<a href="{% url 'employee_add' %}" class="btn btn-primary">+ إضافة موظف</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>الاسم</th>
+                        <th>القسم</th>
+                        <th>المنصب</th>
+                        <th>الراتب</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employees %}
+                    <tr>
+                        <td>{{ emp.name }}</td>
+                        <td>{{ emp.department }}</td>
+                        <td>{{ emp.position }}</td>
+                        <td>{{ emp.salary }}</td>
+                        <td>
+                            {% if emp.is_active %}
+                                <span class="badge bg-success">نشط</span>
+                            {% else %}
+                                <span class="badge bg-danger">غير نشط</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                                            <a href="{% url 'generate_qr' emp.pk %}" class="btn btn-sm btn-info">QR</a>
+<a href="{% url 'promotion_list' emp.pk %}" class="btn btn-sm btn-success">ترقية</a>
+<a href="{% url 'create_employee_account' emp.pk %}" class="btn btn-sm btn-secondary">
+    <i class="bi bi-person-lock"></i> حساب
+</a>
+                            <a href="{% url 'employee_edit' emp.pk %}" class="btn btn-sm btn-warning">تعديل</a>
+                                             <a href="{% url 'employee_delete' emp.pk %}" class="btn btn-sm btn-danger">حذف</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

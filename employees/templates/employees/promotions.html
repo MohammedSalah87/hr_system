@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سجل الترقيات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #1e3a5f;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .sidebar a:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 230px;">
+        <h5 class="text-white text-center mb-4">🏢 نظام HR</h5>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i> لوحة التحكم</a>
+        <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i> الموظفين</a>
+        <a href="{% url 'attendance_list' %}"><i class="bi bi-calendar-check me-2"></i> الحضور</a>
+        <a href="{% url 'shift_list' %}"><i class="bi bi-clock me-2"></i> الشفتات</a>
+        <a href="{% url 'payroll_list' %}"><i class="bi bi-cash-stack me-2"></i> الرواتب</a>
+        <a href="{% url 'work_settings' %}"><i class="bi bi-gear me-2"></i> الإعدادات</a>
+        <a href="{% url 'logout' %}" style="position: absolute; bottom: 20px;">
+            <i class="bi bi-box-arrow-left me-2"></i> تسجيل الخروج
+        </a>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>📈 سجل الترقيات — {{ employee.name }}</h3>
+            <div>
+                <a href="{% url 'promotion_add' employee.pk %}" class="btn btn-primary">+ إضافة ترقية</a>
+                <a href="{% url 'employee_list' %}" class="btn btn-secondary me-2">رجوع</a>
+            </div>
+        </div>
+
+        <!-- معلومات الموظف الحالية -->
+        <div class="card shadow border-0 mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">الوضع الحالي</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p class="text-muted mb-1">المنصب</p>
+                        <h5>{{ employee.position }}</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="text-muted mb-1">القسم</p>
+                        <h5>{{ employee.department }}</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="text-muted mb-1">الراتب الحالي</p>
+                        <h5 class="text-success">{{ employee.salary }}</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="text-muted mb-1">تاريخ التعيين</p>
+                        <h5>{{ employee.hire_date }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- سجل الترقيات -->
+        <div class="card shadow border-0">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">سجل الترقيات والزيادات</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>المنصب القديم</th>
+                            <th>المنصب الجديد</th>
+                            <th>الراتب القديم</th>
+                            <th>الراتب الجديد</th>
+                            <th>الزيادة</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in promotions %}
+                        <tr>
+                            <td>{{ p.date }}</td>
+                            <td>{{ p.old_position }}</td>
+                            <td>{{ p.new_position }}</td>
+                            <td>{{ p.old_salary }}</td>
+                            <td class="text-success">{{ p.new_salary }}</td>
+                            <td class="text-success fw-bold">
+                                +{{ p.new_salary|add:"-"|add:p.old_salary }}
+                            </td>
+                            <td>{{ p.notes|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">لا توجد ترقيات بعد</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>طلب جديد</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #1e3a5f;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .sidebar a:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 230px;">
+        <h5 class="text-white text-center mb-4">🏢 نظام HR</h5>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i> لوحة التحكم</a>
+        <a href="{% url 'request_list' %}"><i class="bi bi-envelope me-2"></i> الطلبات</a>
+        <a href="{% url 'logout' %}" style="position: absolute; bottom: 20px;">
+            <i class="bi bi-box-arrow-left me-2"></i> تسجيل الخروج
+        </a>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <h3 class="mb-4">📝 طلب جديد</h3>
+
+        <div class="card shadow border-0" style="max-width: 600px;">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">تفاصيل الطلب</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label>نوع الطلب</label>
+                        <select name="request_type" class="form-select" required>
+                            <option value="vacation">إجازة سنوية</option>
+                            <option value="sick">إجازة مرضية</option>
+                            <option value="advance">سلفة</option>
+                            <option value="certificate">شهادة عمل</option>
+                            <option value="attendance">تعديل حضور</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>الوصف</label>
+                        <textarea name="description" class="form-control" rows="3" 
+                                  placeholder="اشرح طلبك بالتفصيل" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>من تاريخ</label>
+                            <input type="date" name="start_date" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>إلى تاريخ</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'request_list' %}" class="btn btn-secondary">رجوع</a>
+                        <button type="submit" class="btn btn-primary">إرسال الطلب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
