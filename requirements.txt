@@ -15,6 +15,7 @@ Django==6.0.5
 et_xmlfile==2.0.0
 gitdb==4.0.12
 GitPython==3.1.50
+gunicorn==26.0.0
 h11==0.16.0
 httptools==0.7.1
 idna==3.16
