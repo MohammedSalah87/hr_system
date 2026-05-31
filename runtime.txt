@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "gunicorn hr_system.wsgi",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
